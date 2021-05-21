@@ -1,4 +1,8 @@
+package edu.northwestern.adminSystems.duoNode;
+
 import static org.junit.jupiter.api.Assertions.*;
+
+import edu.northwestern.adminSystems.duoNode.DuoNodePlugin;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;

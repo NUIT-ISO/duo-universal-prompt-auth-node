@@ -1,3 +1,5 @@
+package edu.northwestern.adminSystems.duoNode;
+
 import com.google.inject.assistedinject.Assisted;
 import org.apache.commons.lang.NotImplementedException;
 import org.forgerock.openam.annotations.sm.Attribute;
