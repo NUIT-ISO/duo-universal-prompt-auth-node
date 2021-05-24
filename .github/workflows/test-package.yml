@@ -10,6 +10,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+
       - name: Set up JDK 11
         uses: actions/setup-java@v2
         with:
@@ -18,19 +19,23 @@ jobs:
           server-id: forgerock-private-releases
           server-username: FORGEROCK_MVN_USER
           server-password: FORGEROCK_MVN_PASS
+
       - name: Cache Maven packages
         uses: actions/cache@v2
         with:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
-      - name: Debug m2
-        run: cat ~/.m2/settings.xml
+
       - name: Build with Maven
-        run: mvn --batch-mode --update-snapshots verify
+        run: mvn --batch-mode --update-snapshots --fail-at-end verify
         env:
           # These are taken from the settings.xml ForgeRock generates for you.
           # See the README for info on generating that file -- then grab the user/pass
           # and update it in settings -> secrets -> repository secrets.
           FORGEROCK_MVN_USER: ${{ secrets.FORGEROCK_MVN_USER }}
           FORGEROCK_MVN_PASS: ${{ secrets.FORGEROCK_MVN_PASS }}
+
+      - name: Publish Test Report
+          if: ${{ always() }}
+          uses: scacap/action-surefire-report@v1
