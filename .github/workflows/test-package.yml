@@ -15,15 +15,15 @@ jobs:
         with:
           java-version: '11'
           distribution: 'adopt'
+          server-id: forgerock-private-releases
+          server-username: FORGEROCK_MVN_USER
+          server-password: FORGEROCK_MVN_PASS
       - name: Cache Maven packages
         uses: actions/cache@v2
         with:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
-          server-id: forgerock-private-releases
-          server-username: FORGEROCK_MVN_USER
-          server-password: FORGEROCK_MVN_PASS
       - name: Debug m2
         run: cat ~/.m2/settings.xml
       - name: Build with Maven
