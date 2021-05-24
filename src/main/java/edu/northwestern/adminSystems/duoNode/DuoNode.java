@@ -64,10 +64,11 @@ public class DuoNode extends AbstractDecisionNode {
         } catch (DuoException e) {
             if (failureMode.equals(Config.FailureModes.CLOSED)) {
                 throw new NodeProcessException("Duo health check failed. Cannot proceed when failure mode closed is configured.", e);
-            } else {
-                logger.error("Duo health check failed, but failure mode is set to open. Bypassing Duo.");
-                return goTo(true).build();
             }
+
+            // Failing OPEN means we skip this node when it's down.
+            logger.error("Duo health check failed, but failure mode is set to open. Bypassing Duo.");
+            return goTo(true).build();
         }
 
         if (parameters.containsKey(DuoConstants.RESP_DUO_CODE) && parameters.containsKey(DuoConstants.RESP_STATE))
@@ -190,11 +191,9 @@ public class DuoNode extends AbstractDecisionNode {
 
             if (protocol != null && host != null && port != null && descriptor != null) {
                 return protocol + "://" + host + ":" + port + descriptor;
-            } else {
-                return "";
             }
+
+            return "";
         }
-
     }
-
 }
