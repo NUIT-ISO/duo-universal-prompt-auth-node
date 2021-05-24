@@ -21,5 +21,13 @@ jobs:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
+          server-username: FORGEROCK_MVN_USER
+          server-password: FORGEROCK_MVN_PASS
       - name: Build with Maven
         run: mvn --batch-mode --update-snapshots verify
+        env:
+          # These are taken from the settings.xml ForgeRock generates for you.
+          # See the README for info on generating that file -- then grab the user/pass
+          # and update it in settings -> secrets -> repository secrets.
+          FORGEROCK_MVN_USER: ${{ secrets.FORGEROCK_MVN_USER }}
+          FORGEROCK_MVN_PASS: ${{ secrets.FORGEROCK_MVN_PASS }}
