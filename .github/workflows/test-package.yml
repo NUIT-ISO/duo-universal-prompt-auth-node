@@ -21,6 +21,7 @@ jobs:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
+          server-id: forgerock-private-releases
           server-username: FORGEROCK_MVN_USER
           server-password: FORGEROCK_MVN_PASS
       - name: Build with Maven
