@@ -83,7 +83,7 @@
                         <configuration>
                             <artifactSet>
                                 <includes>
-                                    <include>com.duosecurity:DuoWeb</include>
+                                    <include>com.duosecurity:duo-universal-sdk</include>
                                 </includes>
                             </artifactSet>
                         </configuration>
