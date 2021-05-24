@@ -6,8 +6,31 @@
 
     <groupId>edu.northwestern.admin-systems</groupId>
     <artifactId>duo-universal-prompt-auth-node</artifactId>
-    <description>An Authentication Tree Node for ForgeRock's Identity Platform which integrates Duo's v4 web SDK, featuring the Universal Prompt</description>
+    <packaging>jar</packaging>
     <version>1.0.0</version>
+
+    <name>Duo Universal Prompt Auth Tree Node</name>
+    <description>An Authentication Tree Node for ForgeRock's Identity Platform which integrates Duo's v4 web SDK, featuring the Universal Prompt</description>
+
+    <developers>
+        <developer>
+            <name>Enterprise Application and Cloud Development (EACD)</name>
+            <email>ADO-Cloud-Services@northwestern.edu</email>
+            <organization>Northwestern Information Technology</organization>
+            <organizationUrl>https://northwestern.edu</organizationUrl>
+        </developer>
+    </developers>
+
+    <licenses>
+        <license>
+            <name>MIT</name>
+            <url>https://opensource.org/licenses/MIT</url>
+        </license>
+    </licenses>
+
+    <scm>
+        <url>https://github.com/NIT-Administrative-Systems/duo-universal-prompt-auth-node</url>
+    </scm>
 
     <properties>
         <am.version>7.0.0</am.version>
