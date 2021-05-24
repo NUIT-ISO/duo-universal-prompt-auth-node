@@ -7,6 +7,7 @@ import com.google.inject.assistedinject.Assisted;
 import com.iplanet.am.util.SystemProperties;
 import com.sun.identity.authentication.spi.RedirectCallback;
 import com.sun.identity.shared.Constants;
+import com.sun.identity.sm.RequiredValueValidator;
 import org.forgerock.json.JsonValue;
 import org.forgerock.openam.annotations.sm.Attribute;
 import org.forgerock.openam.auth.node.api.AbstractDecisionNode;
@@ -31,7 +32,7 @@ public class DuoNode extends AbstractDecisionNode {
     private String clientSecret;
     private String apiHostName;
     private String callbackUri;
-    private String failureMode;
+    private Config.FailureModes failureMode;
 
     @Inject
     public DuoNode(@Assisted Config config, CoreWrapper coreWrapper) throws NodeProcessException {
@@ -162,27 +163,27 @@ public class DuoNode extends AbstractDecisionNode {
             OPEN,
         }
 
-        @Attribute(name = "Duo Client ID (ikey)", order = 100)
+        @Attribute(name = "Duo Client ID (ikey)", order = 100, validators = RequiredValueValidator.class)
         default String clientId() {
             return "";
         }
 
-        @Attribute(name = "Duo Client Secret (skey)", order = 200)
+        @Attribute(name = "Duo Client Secret (skey)", order = 200, validators = RequiredValueValidator.class)
         default String clientSecret() {
             return "";
         }
 
-        @Attribute(name = "Duo API Hostname", order = 300)
+        @Attribute(name = "Duo API Hostname", order = 300, validators = RequiredValueValidator.class)
         default String apiHostName() {
             return "";
         }
 
-        @Attribute(name = "Failure Mode When Duo is Down", order = 400) // @TODO add choiceValuesClass key & restrict this to CLOSED/OPEN
-        default String failureMode() {
-            return FailureModes.CLOSED.toString();
+        @Attribute(name = "Failure Mode When Duo is Down", order = 400, validators = RequiredValueValidator.class)
+        default FailureModes failureMode() {
+            return FailureModes.CLOSED;
         }
 
-        @Attribute(name = "OpenAM Callback URL", order = 500)
+        @Attribute(name = "OpenAM Callback URL", order = 500, validators = RequiredValueValidator.class)
         default String callbackUri() {
             final String protocol = SystemProperties.get(Constants.AM_SERVER_PROTOCOL);
             final String host = SystemProperties.get(Constants.AM_SERVER_HOST);
