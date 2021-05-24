@@ -63,7 +63,7 @@ public class DuoNode extends AbstractDecisionNode {
             duoClient.healthCheck();
         } catch (DuoException e) {
             if (failureMode.equals(Config.FailureModes.CLOSED)) {
-                throw new NodeProcessException("Duo health check failed. Cannot proceed.", e);
+                throw new NodeProcessException("Duo health check failed. Cannot proceed when failure mode closed is configured.", e);
             } else {
                 logger.error("Duo health check failed, but failure mode is set to open. Bypassing Duo.");
                 return goTo(true).build();
@@ -72,26 +72,19 @@ public class DuoNode extends AbstractDecisionNode {
 
         if (parameters.containsKey(DuoConstants.RESP_DUO_CODE) && parameters.containsKey(DuoConstants.RESP_STATE))
         {
-            if (! sharedState.isDefined(DuoConstants.SESSION_STATE)) {
-                // This shouldn't happen. It means either someone is doing shenanigans, or something has gone awry with the session.
-                // Clear the session out & try again.
-                logger.warn("Detected Duo callback without initialized session. This may be a spoofing attempt (or a timed out session).");
+            logger.debug("Got Duo callback, processing..."); // @TODO remove me after initial testing
 
-                sharedState.remove(DuoConstants.SESSION_STATE);
-            } else if (! sharedState.get(DuoConstants.SESSION_STATE).toString().equals(parameters.get(DuoConstants.RESP_STATE))) {
-                // This also shouldn't happen -- the state we stored & the state we got back from the redirect URL param ought to match.
-                // Clear the session out & try again.
-                logger.warn("Detected Duo callback with invalid session. This may be a spoofing attempt (or a timed out session).");
+            try {
+                Boolean authenticated = validateCallback(parameters, sharedState);
 
-                sharedState.remove(DuoConstants.SESSION_STATE);
-            } else {
-                String duoCode = parameters.get(DuoConstants.RESP_DUO_CODE).toString();
-                String state = sharedState.get(DuoConstants.SESSION_STATE).toString();
-
-                Boolean authenticated = validateDuoAuthenticated(duoCode, state);
                 logger.debug("Duo validation result: {}", authenticated); // @TODO remove this line, it'll be spammy. but useful during dev.
-
                 return goTo(authenticated).build();
+            } catch (InvalidStateError e) {
+                // This exception is resolvable by starting the Duo flow over.
+                logger.warn(e.getMessage());
+
+                // Clear the session out & let the rest of the method re-do the Duo redirect.
+                sharedState.remove(DuoConstants.SESSION_STATE);
             }
         }
 
@@ -102,7 +95,7 @@ public class DuoNode extends AbstractDecisionNode {
 
         RedirectCallback redirectCallback = new RedirectCallback(duoUrl, null, "GET");
         redirectCallback.setTrackingCookie(true);
-        
+
         return Action.send(redirectCallback).build();
     }
 
@@ -122,6 +115,27 @@ public class DuoNode extends AbstractDecisionNode {
         } catch (DuoException e) {
             throw new NodeProcessException("Unable to create Duo authentication URL", e);
         }
+    }
+
+    /**
+     * Validates the tokens in the callback URL params against the OpenAM session and Duo's auth API.
+     *
+     * Throws an InvalidStateError if the session/URL params don't match. This is going to be caused by an expired
+     * session, or by somebody trying to spoof a Duo response by manipulating the URL.
+     */
+    private Boolean validateCallback(Map<String, List<String>> parameters, JsonValue sharedState) throws InvalidStateError, NodeProcessException {
+        if (! sharedState.isDefined(DuoConstants.SESSION_STATE)) {
+            throw new InvalidStateError("Detected Duo callback without initialized session. This may be a spoofing attempt (or a timed out session).");
+        }
+
+        if (! sharedState.get(DuoConstants.SESSION_STATE).toString().equals(parameters.get(DuoConstants.RESP_STATE))) {
+            throw new InvalidStateError("Detected Duo callback with invalid session. This may be a spoofing attempt (or a timed out session).");
+        }
+
+        String duoCode = parameters.get(DuoConstants.RESP_DUO_CODE).toString();
+        String state = sharedState.get(DuoConstants.SESSION_STATE).toString();
+
+        return validateDuoAuthenticated(duoCode, state);
     }
 
     private Boolean validateDuoAuthenticated(String duoCode, String state) throws NodeProcessException {
