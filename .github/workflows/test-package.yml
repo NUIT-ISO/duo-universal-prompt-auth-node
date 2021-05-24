@@ -37,5 +37,5 @@ jobs:
           FORGEROCK_MVN_PASS: ${{ secrets.FORGEROCK_MVN_PASS }}
 
       - name: Publish Test Report
-          if: ${{ always() }}
-          uses: scacap/action-surefire-report@v1
+        if: ${{ always() }}
+        uses: scacap/action-surefire-report@v1
