@@ -24,7 +24,7 @@ jobs:
           server-id: forgerock-private-releases
           server-username: FORGEROCK_MVN_USER
           server-password: FORGEROCK_MVN_PASS
-      -name: Debug m2
+      - name: Debug m2
         run: cat ~/.m2/settings.xml
       - name: Build with Maven
         run: mvn --batch-mode --update-snapshots verify
