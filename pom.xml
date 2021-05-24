@@ -2,118 +2,126 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+  <modelVersion>4.0.0</modelVersion>
 
-    <groupId>edu.northwestern.admin-systems</groupId>
-    <artifactId>duo-universal-prompt-auth-node</artifactId>
-    <packaging>jar</packaging>
-    <version>1.0.0</version>
+  <groupId>edu.northwestern.admin-systems</groupId>
+  <artifactId>duo-universal-prompt-auth-node</artifactId>
+  <packaging>jar</packaging>
+  <version>1.0.0</version>
 
-    <name>Duo Universal Prompt Auth Tree Node</name>
-    <description>An Authentication Tree Node for ForgeRock's Identity Platform which integrates Duo's v4 web SDK, featuring the Universal Prompt</description>
+  <name>Duo Universal Prompt Auth Tree Node</name>
+  <description>An Authentication Tree Node for ForgeRock's Identity Platform which integrates Duo's v4 web SDK,
+    featuring the Universal Prompt
+  </description>
 
-    <developers>
-        <developer>
-            <name>Enterprise Application and Cloud Development (EACD)</name>
-            <email>ADO-Cloud-Services@northwestern.edu</email>
-            <organization>Northwestern Information Technology</organization>
-            <organizationUrl>https://northwestern.edu</organizationUrl>
-        </developer>
-    </developers>
+  <developers>
+    <developer>
+      <name>Enterprise Application and Cloud Development (EACD)</name>
+      <email>ADO-Cloud-Services@northwestern.edu</email>
+      <organization>Northwestern Information Technology</organization>
+      <organizationUrl>https://northwestern.edu</organizationUrl>
+    </developer>
+  </developers>
 
-    <licenses>
-        <license>
-            <name>MIT</name>
-            <url>https://opensource.org/licenses/MIT</url>
-        </license>
-    </licenses>
+  <licenses>
+    <license>
+      <name>MIT</name>
+      <url>https://opensource.org/licenses/MIT</url>
+    </license>
+  </licenses>
 
-    <scm>
-        <url>https://github.com/NIT-Administrative-Systems/duo-universal-prompt-auth-node</url>
-    </scm>
+  <scm>
+    <url>https://github.com/NIT-Administrative-Systems/duo-universal-prompt-auth-node</url>
+  </scm>
 
-    <properties>
-        <am.version>7.0.0</am.version>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
-    </properties>
+  <properties>
+    <am.version>7.0.0</am.version>
+    <maven.compiler.source>11</maven.compiler.source>
+    <maven.compiler.target>11</maven.compiler.target>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
 
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.forgerock.am</groupId>
-                <artifactId>openam-auth-trees</artifactId>
-                <type>pom</type>
-                <scope>import</scope>
-                <version>${am.version}</version>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
-
+  <dependencyManagement>
     <dependencies>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <version>5.7.2</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.forgerock.am</groupId>
-            <artifactId>auth-node-api</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.forgerock.am</groupId>
-            <artifactId>openam-guice-core</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.forgerock.am</groupId>
-            <artifactId>openam-core</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.duosecurity</groupId>
-            <artifactId>duo-universal-sdk</artifactId>
-            <version>1.1.1</version>
-        </dependency>
+      <dependency>
+        <groupId>org.forgerock.am</groupId>
+        <artifactId>openam-auth-trees</artifactId>
+        <type>pom</type>
+        <scope>import</scope>
+        <version>${am.version}</version>
+      </dependency>
     </dependencies>
+  </dependencyManagement>
 
-    <build>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-            </resource>
-        </resources>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.felix</groupId>
-                <artifactId>maven-bundle-plugin</artifactId>
-                <version>5.1.2</version>
-                <extensions>true</extensions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>3.2.4</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                        <configuration>
-                            <artifactSet>
-                                <includes>
-                                    <include>com.duosecurity:duo-universal-sdk</include>
-                                </includes>
-                            </artifactSet>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
+  <dependencies>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <version>5.7.2</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.forgerock.am</groupId>
+      <artifactId>auth-node-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.forgerock.am</groupId>
+      <artifactId>openam-guice-core</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.forgerock.am</groupId>
+      <artifactId>openam-core</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.duosecurity</groupId>
+      <artifactId>duo-universal-sdk</artifactId>
+      <version>1.1.1</version>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>true</filtering>
+      </resource>
+    </resources>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>3.0.0-M5</version>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.felix</groupId>
+        <artifactId>maven-bundle-plugin</artifactId>
+        <version>5.1.2</version>
+        <extensions>true</extensions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>3.2.4</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <artifactSet>
+                <includes>
+                  <include>com.duosecurity:duo-universal-sdk</include>
+                </includes>
+              </artifactSet>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
 
 </project>
