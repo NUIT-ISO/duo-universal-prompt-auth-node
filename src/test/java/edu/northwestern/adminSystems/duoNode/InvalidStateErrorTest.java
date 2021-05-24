@@ -12,7 +12,6 @@ public class InvalidStateErrorTest {
         InvalidStateError e = new InvalidStateError(message);
 
         assertEquals(message, e.getMessage());
-        assertEquals(1, 2);
     }
 
 }
