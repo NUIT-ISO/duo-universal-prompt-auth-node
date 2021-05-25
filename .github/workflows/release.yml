@@ -43,6 +43,6 @@ jobs:
 
       - uses: ncipollo/release-action@v1.8.6
         with:
-          artifacts: target/duo-universal-prompt-auth-node-1.0.0.jar
+          artifacts: "target/duo-universal-prompt-auth-node-*.jar"
           omitBody: true
           token: ${{ secrets.GITHUB_TOKEN }}
