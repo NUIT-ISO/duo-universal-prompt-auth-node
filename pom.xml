@@ -126,18 +126,26 @@
   <repositories>
     <repository>
       <id>forgerock-private-releases</id>
-      <url>https://maven.forgerock.org/repo/private-releases</url>
+      <url>https://maven.forgerock.org:443/repo/private-releases</url>
+      <releases>
+        <enabled>true</enabled>
+        <checksumPolicy>fail</checksumPolicy>
+      </releases>
       <snapshots>
         <enabled>false</enabled>
+        <checksumPolicy>warn</checksumPolicy>
       </snapshots>
     </repository>
     <repository>
-      <id>oracleReleases</id>
-      <name>Oracle Released Java Packages</name>
-      <url>https://maven.oracle.com</url>
-      <layout>default</layout>
-      <snapshots>
+      <id>forgerock-private-snapshots</id>
+      <url>https://maven.forgerock.org:443/repo/private-snapshots</url>
+      <releases>
         <enabled>false</enabled>
+        <checksumPolicy>fail</checksumPolicy>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+        <checksumPolicy>warn</checksumPolicy>
       </snapshots>
     </repository>
   </repositories>
