@@ -20,8 +20,8 @@ import javax.inject.Inject;
 import java.util.List;
 import java.util.Map;
 
-@Node.Metadata(outcomeProvider = AbstractDecisionNode.OutcomeProvider.class, configClass = DuoNode.Config.class)
-public class DuoNode extends AbstractDecisionNode {
+@Node.Metadata(outcomeProvider = AbstractDecisionNode.OutcomeProvider.class, configClass = DuoUniversalPromptNode.Config.class)
+public class DuoUniversalPromptNode extends AbstractDecisionNode {
     private final Logger logger = LoggerFactory.getLogger("amAuth");
 
     private Client duoClient;
@@ -32,7 +32,7 @@ public class DuoNode extends AbstractDecisionNode {
     private Config.FailureModes failureMode;
 
     @Inject
-    public DuoNode(@Assisted Config config, CoreWrapper coreWrapper) throws NodeProcessException {
+    public DuoUniversalPromptNode(@Assisted Config config, CoreWrapper coreWrapper) throws NodeProcessException {
         clientId = config.clientId();
         clientSecret = config.clientSecret();
         apiHostName = config.apiHostName();
@@ -69,7 +69,8 @@ public class DuoNode extends AbstractDecisionNode {
             return goTo(true).build();
         }
 
-        if (parameters.containsKey(DuoConstants.RESP_DUO_CODE) && parameters.containsKey(DuoConstants.RESP_STATE))
+        if (parameters.containsKey(DuoUniversalPromptConstants.RESP_DUO_CODE) && parameters.containsKey(
+            DuoUniversalPromptConstants.RESP_STATE))
         {
             logger.debug("Got Duo callback, processing..."); // @TODO remove me after initial testing
 
@@ -83,12 +84,12 @@ public class DuoNode extends AbstractDecisionNode {
                 logger.warn(e.getMessage());
 
                 // Clear the session out & let the rest of the method re-do the Duo redirect.
-                sharedState.remove(DuoConstants.SESSION_STATE);
+                sharedState.remove(DuoUniversalPromptConstants.SESSION_STATE);
             }
         }
 
         String state = duoClient.generateState();
-        sharedState.put(DuoConstants.SESSION_STATE, state);
+        sharedState.put(DuoUniversalPromptConstants.SESSION_STATE, state);
 
         String duoUrl = createDuoAuthUrl(userReference, state);
 
@@ -123,16 +124,17 @@ public class DuoNode extends AbstractDecisionNode {
      * session, or by somebody trying to spoof a Duo response by manipulating the URL.
      */
     private Boolean validateCallback(Map<String, List<String>> parameters, JsonValue sharedState) throws InvalidStateError, NodeProcessException {
-        if (! sharedState.isDefined(DuoConstants.SESSION_STATE)) {
+        if (! sharedState.isDefined(DuoUniversalPromptConstants.SESSION_STATE)) {
             throw new InvalidStateError("Detected Duo callback without initialized session. This may be a spoofing attempt (or a timed out session).");
         }
 
-        if (! sharedState.get(DuoConstants.SESSION_STATE).toString().equals(parameters.get(DuoConstants.RESP_STATE))) {
+        if (! sharedState.get(DuoUniversalPromptConstants.SESSION_STATE).toString().equals(parameters.get(
+            DuoUniversalPromptConstants.RESP_STATE))) {
             throw new InvalidStateError("Detected Duo callback with invalid session. This may be a spoofing attempt (or a timed out session).");
         }
 
-        String duoCode = parameters.get(DuoConstants.RESP_DUO_CODE).toString();
-        String state = sharedState.get(DuoConstants.SESSION_STATE).toString();
+        String duoCode = parameters.get(DuoUniversalPromptConstants.RESP_DUO_CODE).toString();
+        String state = sharedState.get(DuoUniversalPromptConstants.SESSION_STATE).toString();
 
         return validateDuoAuthenticated(duoCode, state);
     }
@@ -145,7 +147,7 @@ public class DuoNode extends AbstractDecisionNode {
                 return false;
             }
 
-            return DuoConstants.DUO_TOKEN_SUCCESSFUL_RESULT.equalsIgnoreCase(token.getAuth_result().getStatus());
+            return DuoUniversalPromptConstants.DUO_TOKEN_SUCCESSFUL_RESULT.equalsIgnoreCase(token.getAuth_result().getStatus());
         } catch (DuoException e) {
             throw new NodeProcessException("Unable to exchange authorization code for result", e);
         }

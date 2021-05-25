@@ -1,6 +1,6 @@
 package edu.northwestern.adminSystems.duoNode;
 
-final class DuoConstants {
+final class DuoUniversalPromptConstants {
     /**
      * Key for state param kept in OpenAM's shared state.
      */

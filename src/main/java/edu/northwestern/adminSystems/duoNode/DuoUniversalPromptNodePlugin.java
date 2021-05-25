@@ -8,10 +8,10 @@ import java.util.Properties;
 import org.forgerock.openam.auth.node.api.AbstractNodeAmPlugin;
 import org.forgerock.openam.auth.node.api.Node;
 
-public class DuoNodePlugin extends AbstractNodeAmPlugin {
+public class DuoUniversalPromptNodePlugin extends AbstractNodeAmPlugin {
     private String currentVersion;
 
-    public DuoNodePlugin() throws IOException {
+    public DuoUniversalPromptNodePlugin() throws IOException {
         Properties props = new Properties();
         props.load(this.getClass().getClassLoader().getResourceAsStream("DuoNode.properties"));
 
@@ -21,7 +21,7 @@ public class DuoNodePlugin extends AbstractNodeAmPlugin {
     @Override
     protected Map<String, Iterable<? extends Class<? extends Node>>> getNodesByVersion() {
         return Collections.singletonMap(currentVersion,
-                Collections.singletonList(DuoNode.class));
+                Collections.singletonList(DuoUniversalPromptNode.class));
     }
 
     @Override

@@ -1,5 +1,5 @@
 package edu.northwestern.adminSystems.duoNode;
 
-public class DuoNodeTest {
+public class DuoUniversalPromptNodeTest {
     // @TODO. awful lotta stuff to mock & stub.
 }
