@@ -13,7 +13,7 @@ public class DuoNodePlugin extends AbstractNodeAmPlugin {
 
     public DuoNodePlugin() throws IOException {
         Properties props = new Properties();
-        props.load(this.getClass().getClassLoader().getResourceAsStream("node.properties"));
+        props.load(this.getClass().getClassLoader().getResourceAsStream("DuoNode.properties"));
 
         currentVersion = props.getProperty("pluginVersion");
     }

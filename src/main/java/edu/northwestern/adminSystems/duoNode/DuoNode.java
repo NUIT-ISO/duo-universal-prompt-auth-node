@@ -20,10 +20,7 @@ import javax.inject.Inject;
 import java.util.List;
 import java.util.Map;
 
-@Node.Metadata(
-        outcomeProvider = AbstractDecisionNode.OutcomeProvider.class,
-        configClass = DuoNode.Config.class, tags = {"mfa", "multi-factor authentication"}
-)
+@Node.Metadata(outcomeProvider = AbstractDecisionNode.OutcomeProvider.class, configClass = DuoNode.Config.class)
 public class DuoNode extends AbstractDecisionNode {
     private final Logger logger = LoggerFactory.getLogger("amAuth");
 
