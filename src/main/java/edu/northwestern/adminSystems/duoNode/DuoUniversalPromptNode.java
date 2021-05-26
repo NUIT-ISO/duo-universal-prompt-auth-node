@@ -22,6 +22,11 @@ import java.util.Map;
 
 @Node.Metadata(outcomeProvider = AbstractDecisionNode.OutcomeProvider.class, configClass = DuoUniversalPromptNode.Config.class)
 public class DuoUniversalPromptNode extends AbstractDecisionNode {
+    public enum FailureModes {
+        CLOSED,
+        OPEN,
+    }
+
     private final Logger logger = LoggerFactory.getLogger("amAuth");
 
     private Client duoClient;
@@ -29,7 +34,7 @@ public class DuoUniversalPromptNode extends AbstractDecisionNode {
     private String clientSecret;
     private String apiHostName;
     private String callbackUri;
-    private Config.FailureModes failureMode;
+    private FailureModes failureMode;
 
     @Inject
     public DuoUniversalPromptNode(@Assisted Config config, CoreWrapper coreWrapper) throws NodeProcessException {
@@ -60,7 +65,7 @@ public class DuoUniversalPromptNode extends AbstractDecisionNode {
         try {
             duoClient.healthCheck();
         } catch (DuoException e) {
-            if (failureMode.equals(Config.FailureModes.CLOSED)) {
+            if (failureMode.equals(FailureModes.CLOSED)) {
                 throw new NodeProcessException("Duo health check failed. Cannot proceed when failure mode closed is configured.", e);
             }
 
@@ -157,32 +162,21 @@ public class DuoUniversalPromptNode extends AbstractDecisionNode {
      * Configuration for the Duo node.
      */
     public interface Config {
-        enum FailureModes {
-            CLOSED,
-            OPEN,
-        }
+        @Attribute(order = 100, validators = RequiredValueValidator.class)
+        String clientId();
 
-        @Attribute(name = "Duo Client ID (ikey)", order = 100, validators = RequiredValueValidator.class)
-        default String clientId() {
-            return "";
-        }
+        @Attribute(order = 200, validators = RequiredValueValidator.class)
+        String clientSecret();
 
-        @Attribute(name = "Duo Client Secret (skey)", order = 200, validators = RequiredValueValidator.class)
-        default String clientSecret() {
-            return "";
-        }
+        @Attribute(order = 300, validators = RequiredValueValidator.class)
+        String apiHostName();
 
-        @Attribute(name = "Duo API Hostname", order = 300, validators = RequiredValueValidator.class)
-        default String apiHostName() {
-            return "";
-        }
-
-        @Attribute(name = "Failure Mode When Duo is Down", order = 400, validators = RequiredValueValidator.class)
+        @Attribute(order = 400, validators = RequiredValueValidator.class)
         default FailureModes failureMode() {
             return FailureModes.CLOSED;
         }
 
-        @Attribute(name = "OpenAM Callback URL", order = 500, validators = RequiredValueValidator.class)
+        @Attribute(order = 500, validators = RequiredValueValidator.class)
         default String callbackUri() {
             final String protocol = SystemProperties.get(Constants.AM_SERVER_PROTOCOL);
             final String host = SystemProperties.get(Constants.AM_SERVER_HOST);
