@@ -44,16 +44,6 @@ public class DuoUniversalPromptNode extends AbstractDecisionNode {
         callbackUri = config.callbackUri();
         failureMode = config.failureMode();
         duoClient = initializeDuoClient();
-
-        // @TODO remove me once this is shown to work. but may be helpful for the 1st time we try this node out.
-        logger.debug(
-            "Initialized Duo node with the following config: clientID = {}, secret = {} characters, API hostname = {}, callback URI = {}, and failure mode = {}",
-            clientId,
-            clientSecret.length(),
-            apiHostName,
-            callbackUri,
-            failureMode
-        );
     }
 
     @Override
@@ -77,12 +67,10 @@ public class DuoUniversalPromptNode extends AbstractDecisionNode {
         if (parameters.containsKey(DuoUniversalPromptConstants.RESP_DUO_CODE) && parameters.containsKey(
             DuoUniversalPromptConstants.RESP_STATE))
         {
-            logger.debug("Got Duo callback, processing..."); // @TODO remove me after initial testing
 
             try {
-                Boolean authenticated = validateCallback(parameters, sharedState);
+                Boolean authenticated = validateCallback(parameters, sharedState, userReference);
 
-                logger.debug("Duo validation result: {}", authenticated); // @TODO remove this line, it'll be spammy. but useful during dev.
                 return goTo(authenticated).build();
             } catch (InvalidStateError e) {
                 // This exception is resolvable by starting the Duo flow over.
@@ -128,25 +116,26 @@ public class DuoUniversalPromptNode extends AbstractDecisionNode {
      * Throws an InvalidStateError if the session/URL params don't match. This is going to be caused by an expired
      * session, or by somebody trying to spoof a Duo response by manipulating the URL.
      */
-    private Boolean validateCallback(Map<String, List<String>> parameters, JsonValue sharedState) throws InvalidStateError, NodeProcessException {
+    private Boolean validateCallback(Map<String, List<String>> parameters, JsonValue sharedState, String userReference) throws InvalidStateError, NodeProcessException {
         if (! sharedState.isDefined(DuoUniversalPromptConstants.SESSION_STATE)) {
             throw new InvalidStateError("Detected Duo callback without initialized session. This may be a spoofing attempt (or a timed out session).");
         }
 
-        if (! sharedState.get(DuoUniversalPromptConstants.SESSION_STATE).toString().equals(parameters.get(
-            DuoUniversalPromptConstants.RESP_STATE))) {
+        String state = sharedState.get(DuoUniversalPromptConstants.SESSION_STATE).asString();
+        String stateFromDuoCallback = parameters.get(DuoUniversalPromptConstants.RESP_STATE).get(0);
+        String duoCode = parameters.get(DuoUniversalPromptConstants.RESP_DUO_CODE).get(0);
+
+        // Validate that the Duo callback we've received is for this user.
+        if (! state.equals(stateFromDuoCallback)) {
             throw new InvalidStateError("Detected Duo callback with invalid session. This may be a spoofing attempt (or a timed out session).");
         }
 
-        String duoCode = parameters.get(DuoUniversalPromptConstants.RESP_DUO_CODE).toString();
-        String state = sharedState.get(DuoUniversalPromptConstants.SESSION_STATE).toString();
-
-        return validateDuoAuthenticated(duoCode, state);
+        return validateDuoAuthenticated(duoCode, userReference);
     }
 
-    private Boolean validateDuoAuthenticated(String duoCode, String state) throws NodeProcessException {
+    private Boolean validateDuoAuthenticated(String duoCode, String userReference) throws NodeProcessException {
         try {
-            Token token = duoClient.exchangeAuthorizationCodeFor2FAResult(duoCode, state);
+            Token token = duoClient.exchangeAuthorizationCodeFor2FAResult(duoCode, userReference);
 
             if (token == null || token.getAuth_result() == null) {
                 return false;
