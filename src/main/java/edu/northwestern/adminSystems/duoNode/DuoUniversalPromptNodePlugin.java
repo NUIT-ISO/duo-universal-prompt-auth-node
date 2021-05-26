@@ -13,9 +13,12 @@ public class DuoUniversalPromptNodePlugin extends AbstractNodeAmPlugin {
 
     public DuoUniversalPromptNodePlugin() throws IOException {
         Properties props = new Properties();
-        props.load(this.getClass().getClassLoader().getResourceAsStream("DuoNode.properties"));
+        props.load(this.getClass().getClassLoader().getResourceAsStream("DuoUniversalPromptVersion.properties"));
 
         currentVersion = props.getProperty("pluginVersion");
+        if (currentVersion == null) {
+            throw new NullPointerException("Plugin version could not be loaded.");
+        }
     }
 
     @Override
