@@ -41,7 +41,7 @@ jobs:
         if: ${{ always() }}
         uses: scacap/action-surefire-report@v1
 
-      - uses: ncipollo/release-action@v1.8.6
+      - uses: ncipollo/release-action@v1.8.10
         with:
           artifacts: "target/duo-universal-prompt-auth-node-*.jar"
           omitBody: true
