@@ -7,7 +7,7 @@
   <groupId>edu.northwestern.admin-systems</groupId>
   <artifactId>duo-universal-prompt-auth-node</artifactId>
   <packaging>jar</packaging>
-  <version>1.0.1</version>
+  <version>1.0.2</version>
 
   <name>Duo Universal Prompt Auth Tree Node</name>
   <description>An Authentication Tree Node for ForgeRock's Identity Platform which integrates Duo's v4 web SDK,
@@ -35,7 +35,7 @@
   </scm>
 
   <properties>
-    <am.version>6.5.3</am.version>
+    <am.version>7.2.0</am.version>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
