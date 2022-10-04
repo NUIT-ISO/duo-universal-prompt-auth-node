@@ -37,7 +37,3 @@ jobs:
           # and update it in settings -> secrets -> repository secrets.
           FORGEROCK_MVN_USER: ${{ secrets.FORGEROCK_MVN_USER }}
           FORGEROCK_MVN_PASS: ${{ secrets.FORGEROCK_MVN_PASS }}
-
-      - name: Publish Test Report
-        if: ${{ always() }}
-        uses: scacap/action-surefire-report@v1

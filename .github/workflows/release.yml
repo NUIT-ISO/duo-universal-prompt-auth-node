@@ -39,10 +39,6 @@ jobs:
           FORGEROCK_MVN_USER: ${{ secrets.FORGEROCK_MVN_USER }}
           FORGEROCK_MVN_PASS: ${{ secrets.FORGEROCK_MVN_PASS }}
 
-      - name: Publish Test Report
-        if: ${{ always() }}
-        uses: scacap/action-surefire-report@v1
-
       - uses: ncipollo/release-action@v1.8.6
         with:
           artifacts: "target/duo-universal-prompt-auth-node-*.jar"
