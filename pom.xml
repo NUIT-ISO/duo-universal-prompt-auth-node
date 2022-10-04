@@ -7,7 +7,7 @@
   <groupId>edu.northwestern.admin-systems</groupId>
   <artifactId>duo-universal-prompt-auth-node</artifactId>
   <packaging>jar</packaging>
-  <version>1.0.2</version>
+  <version>1.0.3</version>
 
   <name>Duo Universal Prompt Auth Tree Node</name>
   <description>An Authentication Tree Node for ForgeRock's Identity Platform which integrates Duo's v4 web SDK,
