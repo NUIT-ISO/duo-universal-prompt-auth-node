@@ -39,7 +39,7 @@ jobs:
           FORGEROCK_MVN_USER: ${{ secrets.FORGEROCK_MVN_USER }}
           FORGEROCK_MVN_PASS: ${{ secrets.FORGEROCK_MVN_PASS }}
 
-      - uses: ncipollo/release-action@v1.11.1
+      - uses: ncipollo/release-action@v1.12.0
         with:
           artifacts: "target/duo-universal-prompt-auth-node-*.jar"
           omitBody: true
