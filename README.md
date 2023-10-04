@@ -18,7 +18,7 @@ The OpenAM callback URL is where Duo should redirect users to after they have fi
 ## Development
 You will need a ForgeRock Backstage account attached to an OpenAM subscription in order to download the dependencies. [Create an account](https://backstage.forgerock.com/) & then contact your OpenAM administrators for help with that.
 
-Once you are part of a subscription, visit [their article on accessing their private Maven repositories](https://backstage.forgerock.com/knowledge/kb/article/a74096897) for instructions on configuring your Maven install with credentials. Notably, [their generated ~/.m2/settings.xml](https://maven.forgerock.org/repo/private-releases/settings.xml) must be downloaded & put in place.
+Once you are part of a subscription, visit [their article on accessing their private Maven repositories](https://backstage.forgerock.com/knowledge/kb/article/a74096897) for instructions on configuring your Maven install with credentials. Notably, [their generated ~/.m2/settings.xml](https://maven.forgerock.org/artifactory/private-releases/settings.xml) must be downloaded & put in place.
 
 From there, you can load the project up. Maven will retrieve all necessary dependencies.
 
